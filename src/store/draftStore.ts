@@ -64,7 +64,7 @@ export interface ChargesData {
   hamaliCharges: number;
   greenTax: number;
   miscCharges: number;
-  fuelSurchargePct: number;
+  fuelSurcharge: number;
   handlingCharges: ChargeCardData;
   rovCharges: ChargeCardData;
   codCharges: ChargeCardData;

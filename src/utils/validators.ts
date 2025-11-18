@@ -243,10 +243,10 @@ const ChargesSchema = z.object({
   hamaliCharges: z.number().min(0, 'Hamali charges must be >= 0'),
   greenTax: z.number().min(0, 'Green tax must be >= 0'),
   miscCharges: z.number().min(0, 'Misc charges must be >= 0'),
-  fuelSurchargePct: z
+  fuelSurcharge: z
     .number()
     .min(0, 'Fuel surcharge must be >= 0')
-    .max(40, 'Fuel surcharge must be <= 40'),
+    .max(50, 'Fuel surcharge must be <= 50'),
 
   // Card-based charges (redesigned)
   handlingCharges: ChargeCardSchema,

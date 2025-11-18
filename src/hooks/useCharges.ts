@@ -425,13 +425,13 @@ export interface ChargeCard {
 export interface ChargesData {
   minWeightKg: number;
   docketCharges: number;
-  fuelSurchargePct: number;
+  fuelSurcharge: number;
   minCharges: number;
   greenTax: number;
   daccCharges: number;
   miscCharges: number;
   hamaliCharges: number;
-  
+
   handlingCharges: ChargeCard;
   rovCharges: ChargeCard;
   codCharges: ChargeCard;
@@ -442,13 +442,13 @@ export interface ChargesData {
 export interface ChargesErrors {
   minWeightKg?: string;
   docketCharges?: string;
-  fuelSurchargePct?: string;
+  fuelSurcharge?: string;
   minCharges?: string;
   greenTax?: string;
   daccCharges?: string;
   miscCharges?: string;
   hamaliCharges?: string;
-  
+
   handlingCharges?: Record<string, string>;
   rovCharges?: Record<string, string>;
   codCharges?: Record<string, string>;
@@ -460,6 +460,7 @@ export interface UseChargesReturn {
   charges: ChargesData;
   errors: ChargesErrors;
   setCharge: (field: keyof ChargesData, value: number) => void;
+  updateField: (field: keyof ChargesData, value: number | null) => void;
   setCardField: (
     card: 'handlingCharges' | 'rovCharges' | 'codCharges' | 'toPayCharges' | 'appointmentCharges',
     field: keyof ChargeCard,
@@ -488,13 +489,13 @@ export interface UseChargesReturn {
 const initialCharges: ChargesData = {
   minWeightKg: 0,
   docketCharges: 0,
-  fuelSurchargePct: 0,
+  fuelSurcharge: 15, // Default 15%
   minCharges: 0,
   greenTax: 0,
   daccCharges: 0,
   miscCharges: 0,
   hamaliCharges: 0,
-  
+
   handlingCharges: {
     mode: 'fixed',
     fixedAmount: 0,
@@ -538,7 +539,23 @@ export const useCharges = (): UseChargesReturn => {
       ...prev,
       [field]: value
     }));
-    
+
+    // Clear error when user types
+    if (errors[field as keyof ChargesErrors]) {
+      setErrors(prev => ({
+        ...prev,
+        [field]: undefined
+      }));
+    }
+  }, [errors]);
+
+  // Update field wrapper (supports null for clearing)
+  const updateField = useCallback((field: keyof ChargesData, value: number | null) => {
+    setCharges(prev => ({
+      ...prev,
+      [field]: value ?? 0
+    }));
+
     // Clear error when user types
     if (errors[field as keyof ChargesErrors]) {
       setErrors(prev => ({
@@ -602,30 +619,30 @@ export const useCharges = (): UseChargesReturn => {
   // Validate simple field
   const validateField = useCallback((field: keyof ChargesData): boolean => {
     const value = charges[field];
-    
+
     if (typeof value === 'number') {
       // Simple field validation
       if (field === 'minWeightKg' && value <= 0) {
         setErrors(prev => ({ ...prev, [field]: 'Min weight must be greater than 0' }));
         return false;
       }
-      
-      if (field === 'fuelSurchargePct' && (value < 0 || value > 50)) {
+
+      if (field === 'fuelSurcharge' && (value < 0 || value > 50)) {
         setErrors(prev => ({ ...prev, [field]: 'Fuel surcharge must be between 0-50%' }));
         return false;
       }
-      
+
       if (value < 0) {
         setErrors(prev => ({ ...prev, [field]: 'Value cannot be negative' }));
         return false;
       }
-      
-      if (field !== 'fuelSurchargePct' && value > 10000) {
+
+      if (field !== 'fuelSurcharge' && value > 10000) {
         setErrors(prev => ({ ...prev, [field]: 'Value cannot exceed 10,000' }));
         return false;
       }
     }
-    
+
     setErrors(prev => ({ ...prev, [field]: undefined }));
     return true;
   }, [charges]);
@@ -683,27 +700,27 @@ export const useCharges = (): UseChargesReturn => {
   const validateAll = useCallback((): boolean => {
     let isValid = true;
     const newErrors: ChargesErrors = {};
-    
+
     // Validate simple fields
     const simpleFields: (keyof ChargesData)[] = [
-      'minWeightKg', 'docketCharges', 'fuelSurchargePct', 'minCharges',
+      'minWeightKg', 'docketCharges', 'fuelSurcharge', 'minCharges',
       'greenTax', 'daccCharges', 'miscCharges', 'hamaliCharges'
     ];
-    
+
     simpleFields.forEach(field => {
       const value = charges[field];
-      
+
       if (typeof value === 'number') {
         if (field === 'minWeightKg' && value <= 0) {
           newErrors[field] = 'Min weight must be greater than 0';
           isValid = false;
-        } else if (field === 'fuelSurchargePct' && (value < 0 || value > 50)) {
+        } else if (field === 'fuelSurcharge' && (value < 0 || value > 50)) {
           newErrors[field] = 'Fuel surcharge must be between 0-50%';
           isValid = false;
         } else if (value < 0) {
           newErrors[field] = 'Value cannot be negative';
           isValid = false;
-        } else if (field !== 'fuelSurchargePct' && value > 10000) {
+        } else if (field !== 'fuelSurcharge' && value > 10000) {
           newErrors[field] = 'Value cannot exceed 10,000';
           isValid = false;
         }
@@ -782,26 +799,26 @@ export const useCharges = (): UseChargesReturn => {
   const hasErrors = useCallback((): boolean => {
     // Check simple field errors
     const simpleFieldKeys: (keyof ChargesErrors)[] = [
-      'minWeightKg', 'docketCharges', 'fuelSurchargePct', 'minCharges',
+      'minWeightKg', 'docketCharges', 'fuelSurcharge', 'minCharges',
       'greenTax', 'daccCharges', 'miscCharges', 'hamaliCharges'
     ];
-    
+
     for (const key of simpleFieldKeys) {
       if (errors[key]) return true;
     }
-    
+
     // Check card errors
     const cardKeys: Array<'handlingCharges' | 'rovCharges' | 'codCharges' | 'toPayCharges' | 'appointmentCharges'> = [
       'handlingCharges', 'rovCharges', 'codCharges', 'toPayCharges', 'appointmentCharges'
     ];
-    
+
     for (const key of cardKeys) {
       const cardError = errors[key];
       if (cardError && typeof cardError === 'object' && Object.keys(cardError).length > 0) {
         return true;
       }
     }
-    
+
     return false;
   }, [errors]);
 
@@ -809,6 +826,7 @@ export const useCharges = (): UseChargesReturn => {
     charges,
     errors,
     setCharge,
+    updateField,
     setCardField,
     setCardMode,
     setHandlingUnit,

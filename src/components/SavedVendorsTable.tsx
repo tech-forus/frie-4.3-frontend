@@ -276,7 +276,7 @@ export const SavedVendorsTable: React.FC<{ refreshTrigger?: number }> = ({
                   <dt className="text-slate-600">Min Charges:</dt>
                   <dd>₹{selectedVendor.charges.minCharges}</dd>
                   <dt className="text-slate-600">Fuel Surcharge:</dt>
-                  <dd>{selectedVendor.charges.fuelSurchargePct}%</dd>
+                  <dd>{selectedVendor.charges.fuelSurcharge}%</dd>
                 </dl>
               </div>
             </div>

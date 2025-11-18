@@ -16,10 +16,10 @@ export interface VolumetricDraft {
 }
 
 export function useVolumetric() {
-  // default to centimeters with a sensible industry default (2800 cm³ shown in your UI)
+  // default to centimeters with industry default 2800 cm³
   const [state, setState] = useState<VolumetricState>({
     unit: 'cm',
-    volumetricDivisor: null,
+    volumetricDivisor: 2800, // Default 2800
     cftFactor: null,
   });
 
@@ -52,7 +52,7 @@ export function useVolumetric() {
     });
   }, []);
 
-  // Single “dynamic” setter for the one UI field (depends on current unit)
+  // Single "dynamic" setter for the one UI field (depends on current unit)
   const setDynamicVolumetricValue = useCallback((value: number) => {
     setState((prev) => {
       if (prev.unit === 'cm') {
@@ -60,6 +60,14 @@ export function useVolumetric() {
       }
       return { ...prev, cftFactor: value, volumetricDivisor: null };
     });
+  }, []);
+
+  // Update field wrapper (supports null for clearing)
+  const updateField = useCallback((field: keyof VolumetricState, value: number | null) => {
+    setState((prev) => ({
+      ...prev,
+      [field]: value
+    }));
   }, []);
 
   const validateVolumetric = useCallback(() => {
@@ -118,6 +126,7 @@ export function useVolumetric() {
     // actions
     setUnit,
     setDynamicVolumetricValue,
+    updateField,
     validateVolumetric,
     loadFromDraft,
     reset,
