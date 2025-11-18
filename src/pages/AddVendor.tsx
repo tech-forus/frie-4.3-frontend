@@ -46,7 +46,7 @@ import isEmail from 'isemail';
 // CONFIG / HELPERS
 // ============================================================================
 const API_BASE =
-  (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000').replace(/\/+$/, '');
+  (import.meta.env.VITE_API_BASE_URL || 'https://tester-backend-4nxc.onrender.com').replace(/\/+$/, '');
 
 const ZPM_KEY = 'zonePriceMatrixData';
 

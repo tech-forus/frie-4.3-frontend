@@ -114,7 +114,7 @@ const handleDeleteVendor = async (vendorId: string) => {
   }
   try {
     const token = Cookies.get('authToken') || localStorage.getItem('authToken');
-    const API_BASE = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000').replace(/\/+$/, '');
+    const API_BASE = (import.meta.env.VITE_API_BASE_URL || 'https://tester-backend-4nxc.onrender.com').replace(/\/+$/, '');
     
     // FIX: Changed from fetch`...` to fetch(...)
     const response = await fetch(`${API_BASE}/api/transporter/delete-vendor/${vendorId}`, {

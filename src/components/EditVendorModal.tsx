@@ -19,7 +19,7 @@ interface EditVendorModalProps {
 // HELPER FUNCTIONS
 // =============================================================================
 
-const API_BASE = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000').replace(/\/+$/, '');
+const API_BASE = (import.meta.env.VITE_API_BASE_URL || 'https://tester-backend-4nxc.onrender.com').replace(/\/+$/, '');
 
 function getAuthToken(): string {
   return (
@@ -648,7 +648,7 @@ export default EditVendorModal;
 // import toast from 'react-hot-toast';
 
 // // Backend API configuration
-// const API_BASE_URL = 'http://localhost:8000'; // Adjust to your backend URL
+// const API_BASE_URL = 'https://tester-backend-4nxc.onrender.com'; // Adjust to your backend URL
 
 // interface EditVendorModalProps {
 //   isOpen: boolean;
