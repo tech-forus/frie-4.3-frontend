@@ -109,32 +109,65 @@ const MyVendors = () => {
 
 // Handle delete vendor
 const handleDeleteVendor = async (vendorId: string) => {
-  if (!window.confirm('Are you sure you want to delete this vendor?')) {
-    return;
-  }
+  if (!window.confirm('Are you sure you want to delete this vendor?')) return;
+
   try {
     const token = Cookies.get('authToken') || localStorage.getItem('authToken');
+    if (!token) throw new Error('No auth token found');
+
     const API_BASE = (import.meta.env.VITE_API_BASE_URL || 'https://tester-backend-4nxc.onrender.com').replace(/\/+$/, '');
-    
-    // FIX: Changed from fetch`...` to fetch(...)
-    const response = await fetch(`${API_BASE}/api/transporter/delete-vendor/${vendorId}`, {
+    const res = await fetch(`${API_BASE}/api/transporter/delete-vendor/${vendorId}`, {
       method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
+      headers: { Authorization: `Bearer ${token}` },
     });
-    
-    if (!response.ok) {
-      throw new Error('Failed to delete vendor');
+
+    if (!res.ok) {
+      const body = await res.text().catch(() => null);
+      console.error('Delete vendor failed', res.status, body);
+      if (res.status === 404) {
+        toast.error('Vendor not found (404). Refreshing list.');
+        fetchVendors();
+        return;
+      }
+      throw new Error(body || `Failed to delete vendor: ${res.status}`);
     }
-    
+
     toast.success('Vendor deleted successfully');
-    fetchVendors(); // Refresh list
-  } catch (error: any) {
-    console.error('Error deleting vendor:', error);
-    toast.error(error.message || 'Failed to delete vendor');
+    fetchVendors();
+  } catch (err: any) {
+    console.error('Error deleting vendor:', err);
+    toast.error(err.message || 'Failed to delete vendor');
   }
 };
+
+  
+// const handleDeleteVendor = async (vendorId: string) => {
+//   if (!window.confirm('Are you sure you want to delete this vendor?')) {
+//     return;
+//   }
+//   try {
+//     const token = Cookies.get('authToken') || localStorage.getItem('authToken');
+//     const API_BASE = (import.meta.env.VITE_API_BASE_URL || 'https://tester-backend-4nxc.onrender.com').replace(/\/+$/, '');
+    
+//     // FIX: Changed from fetch`...` to fetch(...)
+//     const response = await fetch(`${API_BASE}/api/transporter/delete-vendor/${vendorId}`, {
+//       method: 'DELETE',
+//       headers: {
+//         'Authorization': `Bearer ${token}`,
+//       },
+//     });
+    
+//     if (!response.ok) {
+//       throw new Error('Failed to delete vendor');
+//     }
+    
+//     toast.success('Vendor deleted successfully');
+//     fetchVendors(); // Refresh list
+//   } catch (error: any) {
+//     console.error('Error deleting vendor:', error);
+//     toast.error(error.message || 'Failed to delete vendor');
+//   }
+// };
 
   if (isLoading) {
     return (
