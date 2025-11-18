@@ -468,10 +468,10 @@ export const ChargesSection: React.FC<ChargesSectionProps> = ({ charges }) => {
   // Check if current value is in predefined options
   React.useEffect(() => {
     const predefinedValues = [0, 5, 10, 15, 20, 25, 30, 35, 40];
-    const isInOptions = predefinedValues.includes(chargeValues.fuelSurchargePct);
+    const isInOptions = predefinedValues.includes(chargeValues.fuelSurcharge);
     if (!isInOptions) {
       setIsFuelOthers(true);
-      setFuelCustomValue(String(chargeValues.fuelSurchargePct));
+      setFuelCustomValue(String(chargeValues.fuelSurcharge));
     }
   }, []);
 
@@ -485,7 +485,7 @@ export const ChargesSection: React.FC<ChargesSectionProps> = ({ charges }) => {
     } else {
       setIsFuelOthers(false);
       setFuelExceedsLimit(false);
-      setCharge('fuelSurchargePct', Number(value));
+      setCharge('fuelSurcharge', Number(value));
     }
   };
 
@@ -498,11 +498,11 @@ export const ChargesSection: React.FC<ChargesSectionProps> = ({ charges }) => {
     const inputNum = parseFloat(raw);
     if (!isNaN(inputNum) && inputNum > 50) {
       setFuelExceedsLimit(true);
-      setCharge('fuelSurchargePct', 50);
+      setCharge('fuelSurcharge', 50);
       setFuelCustomValue('50');
     } else {
       setFuelExceedsLimit(false);
-      setCharge('fuelSurchargePct', val);
+      setCharge('fuelSurcharge', val);
     }
   };
 
@@ -538,19 +538,19 @@ export const ChargesSection: React.FC<ChargesSectionProps> = ({ charges }) => {
 
         {/* Fuel Surcharge with "Others" option */}
         <div>
-          <label htmlFor="fuelSurchargePct" className="block text-xs font-medium text-slate-700 mb-1 uppercase">
+          <label htmlFor="fuelSurcharge" className="block text-xs font-medium text-slate-700 mb-1 uppercase">
             Fuel Surcharge (%) *
           </label>
           {!isFuelOthers ? (
             <select
-              id="fuelSurchargePct"
-              name="fuelSurchargePct"
-              value={chargeValues.fuelSurchargePct}
+              id="fuelSurcharge"
+              name="fuelSurcharge"
+              value={chargeValues.fuelSurcharge}
               onChange={handleFuelDropdownChange}
-              onBlur={() => validateField('fuelSurchargePct')}
+              onBlur={() => validateField('fuelSurcharge')}
               className={`block w-full border rounded-md shadow-sm px-3 py-2 text-sm
                          focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500
-                         ${errors.fuelSurchargePct ? 'border-red-500' : 'border-slate-300'}`}
+                         ${errors.fuelSurcharge ? 'border-red-500' : 'border-slate-300'}`}
             >
               {FUEL_OPTIONS.map((opt) => (
                 <option key={opt.value} value={String(opt.value)}>
@@ -563,15 +563,15 @@ export const ChargesSection: React.FC<ChargesSectionProps> = ({ charges }) => {
               <div className="relative">
                 <input
                   type="text"
-                  id="fuelSurchargePct"
-                  name="fuelSurchargePct"
+                  id="fuelSurcharge"
+                  name="fuelSurcharge"
                   value={fuelCustomValue}
                   onChange={(e) => handleFuelCustomChange(e.target.value)}
-                  onBlur={() => validateField('fuelSurchargePct')}
+                  onBlur={() => validateField('fuelSurcharge')}
                   inputMode="decimal"
                   className={`block w-full border rounded-md shadow-sm pl-3 pr-8 py-2 text-sm
                              focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500
-                             ${errors.fuelSurchargePct || fuelExceedsLimit ? 'border-red-500' : 'border-slate-300'}`}
+                             ${errors.fuelSurcharge || fuelExceedsLimit ? 'border-red-500' : 'border-slate-300'}`}
                   placeholder="Enter 0-50"
                   onKeyDown={(e) => BLOCKED_KEYS.has(e.key) && e.preventDefault()}
                 />
@@ -592,8 +592,8 @@ export const ChargesSection: React.FC<ChargesSectionProps> = ({ charges }) => {
               </button>
             </div>
           )}
-          {errors.fuelSurchargePct && (
-            <p className="mt-1 text-xs text-red-600">{errors.fuelSurchargePct}</p>
+          {errors.fuelSurcharge && (
+            <p className="mt-1 text-xs text-red-600">{errors.fuelSurcharge}</p>
           )}
           {fuelExceedsLimit && (
             <p className="mt-1 text-xs text-red-600">

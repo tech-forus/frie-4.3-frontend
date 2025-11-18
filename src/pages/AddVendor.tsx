@@ -254,37 +254,8 @@ export const AddVendor: React.FC = () => {
     loadZoneData();
   }, []);
 
-    // ✅ ADD THIS NEW useEffect RIGHT AFTER:
-useEffect(() => {
-  // Clear unwanted defaults when there's no draft
-  const draft = readDraft('create');
-  
-  if (!draft) {
-    // No draft exists, clear hook defaults
-    const currentCharges = charges.charges || {};
-    const currentVolumetric = volumetric.volumetric || volumetric.state || {};
-    
-    // Clear fuel surcharge if it's the default 15%
-    if (currentCharges.fuelSurcharge === 15 || currentCharges.fuel === 15) {
-      if (typeof charges.updateField === 'function') {
-        charges.updateField('fuelSurcharge', 0);
-      }
-    }
-    
-    // Clear volumetric divisor if it's the default 2800
-    if (currentVolumetric.volumetricDivisor === 2800) {
-      if (typeof volumetric.updateField === 'function') {
-        volumetric.updateField('volumetricDivisor', null);
-      }
-    }
-    
-    // Clear other defaults as needed
-    emitDebug('CLEARED_HOOK_DEFAULTS', { 
-      clearedFuel: currentCharges.fuelSurcharge === 15,
-      clearedDivisor: currentVolumetric.volumetricDivisor === 2800
-    });
-  }
-}, []);
+  // Note: Default values (fuel=15%, divisor=2800) are now set in the hooks
+  // No need to clear them - they serve as sensible defaults for new vendors
 
   // ===== Validation across sections =====
   const validateVendorBasicsLocal = (): { ok: boolean; errs: string[] } => {
@@ -557,22 +528,6 @@ if (rating < 0 || rating > 5) {
       daccCharges: parseCharge(safeGetNumber(c, 0, 'daccCharges'), 0, 100000),
       miscellanousCharges: parseCharge(safeGetNumber(c, 0, 'miscCharges', 'miscellanousCharges'), 0, 100000),
 
-      insuaranceCharges: {
-        variable: parseCharge(safeGetNumber(c.insuranceCharges || c.insuaranceCharges || c, 0, 'variable', 'insuranceVariable'), 0, 100000),
-        fixed: parseCharge(safeGetNumber(c.insuranceCharges || c.insuaranceCharges || c, 0, 'fixed', 'insuranceFixed'), 0, 100000),
-      },
-      odaCharges: {
-        variable: parseCharge(safeGetNumber(c.odaCharges || c, 0, 'variable'), 0, 100000),
-        fixed: parseCharge(safeGetNumber(c.odaCharges || c, 0, 'fixed'), 0, 100000),
-      },
-      prepaidCharges: {
-        variable: parseCharge(safeGetNumber(c.prepaidCharges || c, 0, 'variable'), 0, 100000),
-        fixed: parseCharge(safeGetNumber(c.prepaidCharges || c, 0, 'fixed'), 0, 100000),
-      },
-      fmCharges: {
-        variable: parseCharge(safeGetNumber(c.fmCharges || c, 0, 'variable'), 0, 100000),
-        fixed: parseCharge(safeGetNumber(c.fmCharges || c, 0, 'fixed'), 0, 100000),
-      },
       // ✅ NEW: Hamali Charges
       hamaliCharges: {
         variable: parseCharge(safeGetNumber(c.hamaliCharges || c, 0, 'variable', 'hamaliVariable'), 0, 100000),
