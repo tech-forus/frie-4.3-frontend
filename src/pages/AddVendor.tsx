@@ -528,10 +528,28 @@ if (rating < 0 || rating > 5) {
       daccCharges: parseCharge(safeGetNumber(c, 0, 'daccCharges'), 0, 100000),
       miscellanousCharges: parseCharge(safeGetNumber(c, 0, 'miscCharges', 'miscellanousCharges'), 0, 100000),
 
-      // ✅ NEW: Hamali Charges
+      // Hamali Charges
       hamaliCharges: {
         variable: parseCharge(safeGetNumber(c.hamaliCharges || c, 0, 'variable', 'hamaliVariable'), 0, 100000),
         fixed: parseCharge(safeGetNumber(c.hamaliCharges || c, 0, 'fixed', 'hamaliFixed'), 0, 100000),
+      },
+
+      // Required fields for backend compatibility (default to 0)
+      insuaranceCharges: {
+        variable: 0,
+        fixed: 0,
+      },
+      odaCharges: {
+        variable: 0,
+        fixed: 0,
+      },
+      prepaidCharges: {
+        variable: 0,
+        fixed: 0,
+      },
+      fmCharges: {
+        variable: 0,
+        fixed: 0,
       },
     };
     

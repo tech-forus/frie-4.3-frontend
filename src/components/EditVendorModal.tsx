@@ -246,8 +246,7 @@ export const EditVendorModal: React.FC<EditVendorModalProps> = ({ vendor, onClos
             greenTax: parseFloat(formData.greenTax.toString()) || 0,
             daccCharges: parseFloat(formData.daccCharges.toString()) || 0,
             miscCharges: parseFloat(formData.miscCharges.toString()) || 0,
-            hamaliCharges: parseFloat(formData.hamaliCharges.toString()) || 0,
-            
+
             handlingCharges: {
               fixed: formData.handlingCharges.mode === 'fixed' ? (parseFloat(formData.handlingCharges.fixedAmount.toString()) || 0) : 0,
               variable: formData.handlingCharges.mode === 'variable' ? (parseFloat(formData.handlingCharges.variablePercent.toString()) || 0) : 0,
@@ -271,6 +270,30 @@ export const EditVendorModal: React.FC<EditVendorModalProps> = ({ vendor, onClos
             appointmentCharges: {
               fixed: formData.appointmentCharges.mode === 'fixed' ? (parseFloat(formData.appointmentCharges.fixedAmount.toString()) || 0) : 0,
               variable: formData.appointmentCharges.mode === 'variable' ? (parseFloat(formData.appointmentCharges.variablePercent.toString()) || 0) : 0,
+            },
+
+            // Hamali charges as object format
+            hamaliCharges: {
+              fixed: parseFloat(formData.hamaliCharges.toString()) || 0,
+              variable: 0,
+            },
+
+            // Required fields for backend compatibility (default to 0)
+            insuaranceCharges: {
+              variable: 0,
+              fixed: 0,
+            },
+            odaCharges: {
+              variable: 0,
+              fixed: 0,
+            },
+            prepaidCharges: {
+              variable: 0,
+              fixed: 0,
+            },
+            fmCharges: {
+              variable: 0,
+              fixed: 0,
             },
           },
         },
